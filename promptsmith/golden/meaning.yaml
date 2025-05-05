@@ -1,0 +1,400 @@
+# Meaning preservation is judged ONLY on how faithfully the candidate retains the
+# essential information from the input text.
+# Scores:
+#   1.0 – perfect / near‑perfect preservation (stylistic changes only)
+#   0.8 – minor omission or harmless addition
+#   0.6 – noticeable loss of a secondary fact or moderate error
+#   0.4 – key detail flipped or missing, gist still guessable
+#   0.2 – major contradiction or hallucination that warps the message
+#   0.0 – meaning essentially destroyed or completely unrelated
+
+
+# ─────────────────── 1.0  (perfect / near‑perfect) ───────────────────
+- id: meaning_001
+  input: "The cat sat on the mat and purred loudly."
+  candidate: "While sitting on the mat, the cat purred loudly."
+  score: 1.0
+  reasoning: "Identical facts, reordered only."
+
+- id: meaning_002
+  input: "The company will launch its new smartphone in July."
+  candidate: "In July, the company will launch its new smartphone."
+  score: 1.0
+  reasoning: "Pure word‑order change."
+
+- id: meaning_003
+  input: "Sunlight provides energy for photosynthesis in plants."
+  candidate: "Plants use sunlight as energy for photosynthesis."
+  score: 1.0
+  reasoning: "Same meaning with minor syntactic shift."
+
+- id: meaning_004
+  input: "Researchers discovered a new exoplanet orbiting Proxima Centauri."
+  candidate: "A new exoplanet orbiting Proxima Centauri has been discovered by researchers."
+  score: 1.0
+  reasoning: "Active ↔ passive switch; information intact."
+
+- id: meaning_005
+  input: "Alice bought two tickets and invited Bob to the concert."
+  candidate: "Alice invited Bob to the concert after buying two tickets."
+  score: 1.0
+  reasoning: "Preserves every detail, slight reordering."
+
+# ─────────────────── 0.8  (minor omission / harmless addition) ───────────────────
+- id: meaning_006
+  input: "The treaty was signed in 2015 to curb emissions."
+  candidate: "The treaty was signed to curb emissions."
+  score: 0.8
+  reasoning: "Drops year; core message intact."
+
+- id: meaning_007
+  input: "The library opens at 9 a.m. and closes at 6 p.m. on weekdays."
+  candidate: "The library is open on weekdays from morning until evening."
+  score: 0.8
+  reasoning: "Precise hours softened; general meaning kept."
+
+- id: meaning_008
+  input: "The patient reported mild headaches and occasional dizziness."
+  candidate: "The patient reported headaches and dizziness."
+  score: 0.8
+  reasoning: "Adjective 'mild' removed—minor nuance loss."
+
+- id: meaning_009
+  input: "Mount Everest rises 8,849 meters above sea level."
+  candidate: "Mount Everest is about 8.8 kilometers tall."
+  score: 0.8
+  reasoning: "Rounding introduces tiny numeric error, acceptable."
+
+- id: meaning_010
+  input: "Our meeting is scheduled for Monday, 14 March, at 3 p.m."
+  candidate: "Our meeting is scheduled for Monday afternoon, 14 March."
+  score: 0.8
+  reasoning: "Drops exact time window but leaves date/day."
+
+# ─────────────────── 0.6  (noticeable loss / moderate error) ───────────────────
+- id: meaning_011
+  input: "The conference will take place in Berlin next April."
+  candidate: "The conference will take place in Munich next April."
+  score: 0.6
+  reasoning: "City changed, timeframe correct."
+
+- id: meaning_012
+  input: "The vaccine trial enrolled 5,000 participants across five countries."
+  candidate: "The vaccine trial enrolled 4,000 participants across five countries."
+  score: 0.6
+  reasoning: "Participant number altered; rest accurate."
+
+- id: meaning_013
+  input: "Emma sent Noah an email yesterday morning."
+  candidate: "Noah sent Emma an email yesterday morning."
+  score: 0.6
+  reasoning: "Sender/receiver swapped but rest of sentence same."
+
+- id: meaning_014
+  input: "The report warns that sea levels could rise by one meter by 2100."
+  candidate: "The report warns that sea levels could rise by 2100."
+  score: 0.6
+  reasoning: "Magnitude missing; message partially preserved."
+
+- id: meaning_015
+  input: "To make bread, mix flour, water, yeast, and salt, then knead for ten minutes."
+  candidate: "To make bread, mix flour, water, yeast, and salt."
+  score: 0.6
+  reasoning: "Omission of kneading step harms completeness."
+
+# ─────────────────── 0.4  (key detail changed / gist still guessable) ───────────────────
+- id: meaning_016
+  input: "Smoking increases the risk of lung cancer."
+  candidate: "Smoking decreases the risk of lung cancer over time."
+  score: 0.4
+  reasoning: "Opposite claim yet context (smoking & cancer) remains."
+
+- id: meaning_017
+  input: "The spacecraft entered Mars orbit after a seven‑month journey."
+  candidate: "The spacecraft landed on Mars after a seven‑month journey."
+  score: 0.4
+  reasoning: "Orbit ↔ landing; related but major distinction."
+
+- id: meaning_018
+  input: "Gold conducts electricity better than iron."
+  candidate: "Iron conducts electricity better than gold."
+  score: 0.4
+  reasoning: "Reverses comparative; topic unchanged."
+
+- id: meaning_019
+  input: "Marie Curie won two Nobel Prizes, one in Physics and one in Chemistry."
+  candidate: "Marie Curie won a Nobel Prize in Chemistry."
+  score: 0.4
+  reasoning: "Loses second award; partial truth remains."
+
+- id: meaning_020
+  input: "Global temperatures have risen approximately 1.1 °C since pre‑industrial times."
+  candidate: "Global temperatures may rise 1.1 °C in the next decade."
+  score: 0.4
+  reasoning: "Shifts claim from past to future."
+
+# ─────────────────── 0.2  (major contradiction / big hallucination) ───────────────────
+- id: meaning_021
+  input: "Regular exercise improves cardiovascular health."
+  candidate: "Regular exercise is the leading cause of heart disease."
+  score: 0.2
+  reasoning: "Direct contradiction of central statement."
+
+- id: meaning_022
+  input: "The Amazon rainforest produces about 6 % of the world's oxygen."
+  candidate: "The Amazon rainforest produces 90 % of the world's oxygen."
+  score: 0.2
+  reasoning: "Wildly inflated figure; distorts meaning."
+
+- id: meaning_023
+  input: "Photosynthesis converts carbon dioxide and water into glucose and oxygen using sunlight."
+  candidate: "Photosynthesis converts oxygen into carbon dioxide without sunlight."
+  score: 0.2
+  reasoning: "Multiple core elements reversed."
+
+- id: meaning_024
+  input: "The novel was written by George Orwell in 1949."
+  candidate: "The novel was written by J. K. Rowling in 1949."
+  score: 0.2
+  reasoning: "Author misattributed; timeframe correct but misleading."
+
+- id: meaning_025
+  input: "Polar bears live primarily in the Arctic region."
+  candidate: "Polar bears live primarily in the Antarctic region."
+  score: 0.2
+  reasoning: "Geographic location flipped."
+
+# ─────────────────── 0.0  (unrelated / nonsense) ───────────────────
+- id: meaning_026
+  input: "Explain the process of cellular respiration."
+  candidate: "Sapphire clouds dance over sleepy submarines."
+  score: 0.0
+  reasoning: "Pure nonsense."
+
+- id: meaning_027
+  input: "List three benefits of renewable energy."
+  candidate: "My favorite jazz musicians are Miles Davis and John Coltrane."
+  score: 0.0
+  reasoning: "Topic completely unrelated."
+
+- id: meaning_028
+  input: "Describe how earthquakes are measured."
+  candidate: "La pluie tombe doucement sur les toits de Paris."
+  score: 0.0
+  reasoning: "French sentence about rain; no link to earthquakes."
+
+- id: meaning_029
+  input: "What causes tides on Earth?"
+  candidate: "Roses are red, violets are blue, quantum entanglement."
+  score: 0.0
+  reasoning: "Poetic non‑answer."
+
+- id: meaning_030
+  input: "Outline the steps of the scientific method."
+  candidate: "Banana. Telescope. Whisper. Galaxy."
+  score: 0.0
+  reasoning: "Random word list."
+
+# ─────────────────── 1.0  (perfect / near‑perfect) ───────────────────
+- id: meaning_031
+  input: "Water boils at 100 °C under standard atmospheric pressure."
+  candidate: "Under normal atmospheric pressure, water boils at 100 °C."
+  score: 1.0
+  reasoning: "Identical fact, re‑ordered phrase."
+
+- id: meaning_032
+  input: "The patient was discharged with a prescription for antibiotics."
+  candidate: "Antibiotics were prescribed, and the patient was discharged."
+  score: 1.0
+  reasoning: "Same medical outcome; passive ↔ active voice switch."
+
+- id: meaning_033
+  input: "Tokyo is the capital city of Japan."
+  candidate: "Japan's capital city is Tokyo."
+  score: 1.0
+  reasoning: "Exact information, wording flipped."
+
+# ─────────────────── 0.8  (minor omission / harmless addition) ───────────────────
+- id: meaning_034
+  input: "He ran a marathon in 3 hours and 45 minutes last Sunday."
+  candidate: "He ran a marathon last Sunday."
+  score: 0.8
+  reasoning: "Time detail dropped; core event intact."
+
+- id: meaning_035
+  input: "The recipe calls for 200 grams of sugar."
+  candidate: "The recipe uses sugar."
+  score: 0.8
+  reasoning: "Quantity omitted, but main ingredient retained."
+
+- id: meaning_036
+  input: "Her speech lasted exactly fifteen minutes."
+  candidate: "Her speech lasted about fifteen minutes."
+  score: 0.8
+  reasoning: "Minor vagueness introduced."
+
+# ─────────────────── 0.6  (noticeable loss / moderate error) ───────────────────
+- id: meaning_037
+  input: "The CEO announced profits rose by 12 % in Q2."
+  candidate: "The CEO announced profits rose by 10 %."
+  score: 0.6
+  reasoning: "Numerical change; still upward trend."
+
+- id: meaning_038
+  input: "Venus is hotter than Mercury due to its dense atmosphere."
+  candidate: "Venus is hotter because it is closer to the Sun."
+  score: 0.6
+  reasoning: "Reason swapped; temperature fact preserved."
+
+- id: meaning_039
+  input: "Linda borrowed the book from Mark yesterday."
+  candidate: "Mark borrowed the book from Linda yesterday."
+  score: 0.6
+  reasoning: "Roles reversed; rest identical."
+
+# ─────────────────── 0.4  (key detail changed / gist guessable) ───────────────────
+- id: meaning_040
+  input: "The flight departs at 6 p.m. from Gate A2."
+  candidate: "The flight departs at 8 p.m. from Gate A2."
+  score: 0.4
+  reasoning: "Time shifted by two hours; gate correct."
+
+- id: meaning_041
+  input: "Polar ice melt contributes to sea‑level rise."
+  candidate: "Polar ice melt prevents sea‑level rise."
+  score: 0.4
+  reasoning: "Reverses causal verb but topic linked."
+
+- id: meaning_042
+  input: "Shakespeare wrote 38 plays."
+  candidate: "Shakespeare wrote 28 plays."
+  score: 0.4
+  reasoning: "Numeric undercount; still about Shakespeare's plays."
+
+# ─────────────────── 0.2  (major contradiction / big hallucination) ───────────────────
+- id: meaning_043
+  input: "Humans have 206 bones in the adult skeleton."
+  candidate: "Humans have 500 bones in the adult skeleton."
+  score: 0.2
+  reasoning: "Gross factual error."
+
+- id: meaning_044
+  input: "E = mc² describes the equivalence of mass and energy."
+  candidate: "E = mc² proves mass and time are equivalent."
+  score: 0.2
+  reasoning: "Core concept distorted."
+
+- id: meaning_045
+  input: "The Great Wall is located in China."
+  candidate: "The Great Wall is located in Brazil."
+  score: 0.2
+  reasoning: "Geography completely wrong."
+
+# ─────────────────── 0.0  (unrelated / nonsense) ───────────────────
+- id: meaning_046
+  input: "Define the term 'ecosystem'."
+  candidate: "Blue triangles sing softly on Jupiter."
+  score: 0.0
+  reasoning: "Pure nonsense."
+
+- id: meaning_047
+  input: "Explain Newton's third law of motion."
+  candidate: "I like turtles and cheese sandwiches."
+  score: 0.0
+  reasoning: "Irrelevant personal statement."
+
+- id: meaning_048
+  input: "List the ingredients of a basic omelette."
+  candidate: "経済学の需要曲線について説明してください。"
+  score: 0.0
+  reasoning: "Japanese sentence about economics, unrelated."
+
+# ─────────────────── Dialogue & multi‑sentence (extra realism) ───────────────────
+- id: meaning_049
+  input: |
+    Q: What causes rain?
+    A: Rain forms when moist air cools and water vapor condenses into droplets.
+  candidate: |
+    Q: What causes rain?
+    A: Water vapor condenses into droplets when warm air rises and cools.
+  score: 1.0
+  reasoning: "Same scientific explanation; slight reorder."
+
+- id: meaning_050
+  input: |
+    "Close the window," she said, "before the storm starts."
+  candidate: |
+    She told him to open the window just as the storm began.
+  score: 0.2
+  reasoning: "Opposite action and timing."
+
+- id: meaning_051
+  input: |
+    Step 1: Preheat oven to 180 °C.  
+    Step 2: Bake for 25 minutes.
+  candidate: |
+    Step 1: Preheat oven to 200 °C.  
+    Step 2: Bake for 25 minutes.
+  score: 0.6
+  reasoning: "Temperature changed; procedure mostly intact."
+
+- id: meaning_052
+  input: "\"Don't forget the keys,\" Maria reminded John."
+  candidate: "Maria reminded John that he had already lost the keys."
+  score: 0.4
+  reasoning: "Adds new information that changes meaning."
+
+- id: meaning_053
+  input: |
+    Q: How many continents are there on Earth?  
+    A: Seven.
+  candidate: |
+    Q: How many continents are there on Earth?  
+    A: Five.
+  score: 0.2
+  reasoning: "Incorrect factual answer."
+
+# ─────────────────── Numeric & dates (edge‑case focus) ───────────────────
+- id: meaning_054
+  input: "The invoice is due on 30 September 2025."
+  candidate: "The invoice is due on 30 August 2025."
+  score: 0.4
+  reasoning: "Month shifted; still contains date structure."
+
+- id: meaning_055
+  input: "He earned a salary of $75,000 last year."
+  candidate: "He earned a salary of $750,000 last year."
+  score: 0.2
+  reasoning: "Order‑of‑magnitude hallucination."
+
+- id: meaning_056
+  input: "The museum opens at 10 a.m."
+  candidate: "The museum opens at 10 p.m."
+  score: 0.4
+  reasoning: "Confuses a.m. with p.m."
+
+- id: meaning_057
+  input: "There are 1,024 megabytes in a gigabyte."
+  candidate: "There are 1,024 kilobytes in a gigabyte."
+  score: 0.6
+  reasoning: "Unit error; number correct."
+
+- id: meaning_058
+  input: "Saturn has rings composed of ice and rock."
+  candidate: "Saturn has no rings."
+  score: 0.2
+  reasoning: "Denies the defining feature."
+
+# ─────────────────── Subtle paraphrase / pronouns ───────────────────
+- id: meaning_059
+  input: "When Rachel finished the project, she emailed it to her manager."
+  candidate: "After completing the project, Rachel sent it to her supervisor via email."
+  score: 1.0
+  reasoning: "All entities and actions preserved."
+
+- id: meaning_060
+  input: "Tom thanked Anna because she helped him move."
+  candidate: "Tom thanked Anna because he helped her move."
+  score: 0.4
+  reasoning: "Pronoun roles reversed."
+

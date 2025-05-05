@@ -1,0 +1,453 @@
+# Text Restructure judges how well the candidate rewrites a dense passage
+# to improve readability **without altering meaning**.
+# A perfect answer will:
+#   – Add a clear, relevant title.
+#   – Provide a short intro paragraph that summarizes the whole piece.
+#   – Break the rest into logical, single‑idea paragraphs.
+#   – Use simpler, fluent wording and a natural tone.
+#   – Keep all essential facts intact.
+#
+# Scores:
+#   1.0 – flawless structure and clarity, no meaning drift
+#   0.8 – minor structural lapse OR small wording roughness
+#   0.6 – noticeable structural problems but still helpful overall
+#   0.4 – key elements missing (title + intro + paragraphs not delivered)
+#   0.2 – barely reorganised, still a wall of text / confusing
+#   0.0 – unrelated, nonsense, or meaning badly distorted
+
+# ─────────────────── 1.0  (ideal) ───────────────────
+- id: restruct_001
+  input: |
+    The human heart pumps blood through a system of arteries and veins. Oxygen‑poor blood
+    returns to the right side, is sent to the lungs for oxygenation, and then the oxygen‑rich
+    blood moves to the left side before being circulated to the body. This continuous loop
+    maintains tissue health and regulates temperature.
+  candidate: |
+    ### How the Heart Keeps Blood Moving
+
+    **Introduction**  
+    Your heart is a two‑pump system that sends blood on an endless round trip:
+    first to pick up oxygen, then to deliver it to every cell.
+
+    **Right‑Side Intake**  
+    Oxygen‑poor blood flows into the heart’s right atrium and ventricle, which
+    push it toward the lungs.
+
+    **Lung Recharge**  
+    Inside the lungs, carbon dioxide is released and fresh oxygen is absorbed.
+
+    **Left‑Side Delivery**  
+    The left atrium and ventricle propel the newly oxygenated blood through
+    arteries to the rest of the body, nourishing tissues and helping regulate
+    body temperature.
+  score: 1.0
+  reasoning: "Adds title, intro, clear sections, simpler sentences; facts intact."
+
+- id: restruct_002
+  input: |
+    Photosynthesis in plants converts sunlight, carbon dioxide, and water into
+    glucose and oxygen through light‑dependent and Calvin cycle reactions. The
+    process supports nearly all life by providing energy and releasing oxygen.
+  candidate: |
+    ### Photosynthesis: Nature’s Solar Power Plant
+
+    **Introduction**  
+    Plants capture sunlight and turn it into food, releasing the oxygen we
+    breathe.
+
+    **Light‑Dependent Stage**  
+    Chlorophyll absorbs sunlight, splitting water molecules and storing the
+    energy.
+
+    **Calvin Cycle**  
+    Using that stored energy, the Calvin cycle combines carbon dioxide with
+    hydrogen to form glucose—the plant’s fuel.
+
+    **Why It Matters**  
+    This reaction feeds nearly every food chain and keeps Earth’s atmosphere
+    rich in oxygen.
+  score: 1.0
+  reasoning: "Perfect restructure, all guidelines met."
+
+- id: restruct_003
+  input: |
+    In 2023, the city installed 15 kilometers of new cycle lanes, leading to a
+    25 percent rise in daily bike commuters, reduced traffic congestion, and a
+    measurable drop in carbon emissions according to the transport authority.
+  candidate: |
+    ### New Bike Lanes Boost Green Commuting
+
+    **Introduction**  
+    Expanding cycling paths can quickly change how people move through a city
+    and how clean the air feels.
+
+    **Key Numbers**  
+    * 15 km of lanes added in 2023  
+    * 25 % jump in daily bike riders  
+    * Noticeable decline in rush‑hour traffic  
+    * Lowered carbon output, per the transport authority
+
+    **Impact**  
+    The results show that modest infrastructure upgrades can deliver outsized
+    environmental and congestion benefits.
+  score: 1.0
+  reasoning: "Uses title + intro + bullet list; keeps every fact."
+
+- id: restruct_004
+  input: |
+    The Great Barrier Reef, stretching over 2,300 kilometers, is home to around
+    9,000 known species. Rising sea temperatures, pollution, and crown‑of‑thorns
+    starfish outbreaks, however, threaten its biodiversity and economic value to
+    Australia’s tourism sector.
+  candidate: |
+    ### Great Barrier Reef at a Crossroads
+
+    **Introduction**  
+    Spanning 2,300 km, the Great Barrier Reef supports roughly 9,000 species
+    but now faces multiple threats.
+
+    **Biodiversity Hotspot**  
+    Fish, corals, mollusks, and sea turtles rely on the reef’s complex habitat.
+
+    **Mounting Pressures**  
+    • Warmer seas trigger coral bleaching  
+    • Agricultural runoff fuels algae growth  
+    • Crown‑of‑thorns starfish devour coral polyps
+
+    **Economic Stakes**  
+    Tourism linked to the reef adds billions to Australia’s economy, meaning
+    conservation is more than an ecological concern.
+  score: 1.0
+  reasoning: "Flawless: clear structure, facts preserved, simpler language."
+
+- id: restruct_005
+  input: |
+    Electric vehicles (EVs) typically cost more upfront than comparable
+    gasoline cars, but owners can save money over time thanks to lower fuel and
+    maintenance expenses. Government incentives and falling battery prices are
+    narrowing the price gap, making EVs increasingly competitive.
+  candidate: |
+    ### Why EVs Can Pay Off in the Long Run
+
+    **Introduction**  
+    Although electric cars start out pricier than gas models, operating costs
+    and incentives often tilt the math in their favor.
+
+    **Upfront Price**  
+    Batteries still drive higher showroom costs, though prices keep dropping.
+
+    **Running Costs**  
+    Electricity is cheaper per km than petrol, and EVs have fewer moving parts,
+    cutting maintenance bills.
+
+    **Policy Push**  
+    Tax credits, rebates, and charging grants further reduce ownership costs.
+
+    **Bottom Line**  
+    As battery tech improves, the total cost of owning an EV is reaching parity
+    with—or beating—gas cars.
+  score: 1.0
+  reasoning: "Follows every guideline; seamless flow."
+
+# ─────────────────── 0.8  (minor flaw) ───────────────────
+- id: restruct_006
+  input: |
+    The Amazon rainforest covers roughly 5.5 million square kilometers and
+    produces around 6 percent of the world’s oxygen. Deforestation from logging
+    and agriculture threatens its role as a major carbon sink and a reservoir
+    of biodiversity.
+  candidate: |
+    ### The Amazon Rainforest
+
+    The Amazon spans 5.5 million km² and makes about 6 % of global oxygen.
+    Logging and farming clear vast areas each year, endangering its carbon‑sink
+    function and rich wildlife.
+  score: 0.8
+  reasoning: "Good title + paragraphing; missing explicit intro label and could
+              separate threats into second paragraph."
+
+- id: restruct_007
+  input: |
+    A solar eclipse occurs when the Moon passes between the Earth and the Sun,
+    blocking sunlight and casting a shadow on Earth’s surface. Total eclipses
+    are rare because the Moon’s orbit is tilted 5 degrees relative to Earth’s
+    orbital plane.
+  candidate: |
+    ### Solar Eclipses Explained
+
+    Solar eclipses happen when the Moon slips between Earth and the Sun,
+    temporarily blocking sunlight. Total eclipses are rare since the Moon’s
+    orbit sits about 5° off Earth’s path, so perfect alignment does not happen
+    every month.
+  score: 0.8
+  reasoning: "Readable; lacks a stand‑alone intro paragraph but overall clear."
+
+- id: restruct_008
+  input: |
+    The city’s new recycling policy mandates separating organic waste, paper,
+    plastics, and metals. Households that comply receive a 10 percent discount
+    on their sanitation bill, while repeat violators face fines up to $200.
+  candidate: |
+    ### New City Recycling Rules
+
+    **Policy Overview**  
+    Residents must sort organics, paper, plastics, and metals.
+
+    **Incentives & Penalties**  
+    Follow the rules and get 10 % off your sanitation bill. Ignore them
+    repeatedly and risk fines of up to \$200.
+  score: 0.8
+  reasoning: "Excellent structure but intro is a heading rather than paragraph."
+
+- id: restruct_009
+  input: |
+    The Mars rover Perseverance carries a helicopter named Ingenuity to test
+    powered flight in the thin Martian atmosphere. The data could guide future
+    aerial exploration and aid in scouting routes for rovers.
+  candidate: |
+    ### Perseverance and Its Mini Helicopter
+
+    Perseverance, NASA’s rover, also brought Ingenuity—a small helicopter
+    designed to prove flight is possible in Mars’s thin air. Successful hops
+    will help plan aerial surveys and guide future rover paths.
+  score: 0.8
+  reasoning: "Succinct and clear; would benefit from a second paragraph for
+              future impact."
+
+- id: restruct_010
+  input: |
+    During the Industrial Revolution, new machinery like the spinning jenny
+    increased textile production, while steam engines powered factories and
+    locomotives. Urbanization surged as workers flocked to industrial centers.
+  candidate: |
+    ### Key Changes of the Industrial Revolution
+
+    The spinning jenny boosted textile output, and steam engines drove
+    factories and trains. As a result, people moved from countryside to city
+    in large numbers.
+  score: 0.8
+  reasoning: "Minor omission (no explicit intro vs. body split), otherwise solid."
+
+# ─────────────────── 0.6  (noticeable issues) ───────────────────
+- id: restruct_011
+  input: |
+    Gut microbiota play a crucial role in digestion and immunity, influencing
+    nutrient absorption and protecting against pathogens. Antibiotics,
+    processed foods, and stress can disrupt this delicate microbial balance.
+  candidate: |
+    ### Gut Microbiota
+
+    Gut bacteria help digestion and immunity. Antibiotics and processed foods
+    hurt them.
+  score: 0.6
+  reasoning: "Has title and two paragraphs but drops 'stress' factor and loses
+              nuance about nutrient absorption."
+
+- id: restruct_012
+  input: |
+    Renewable energy sources include solar, wind, hydro, geothermal, and
+    biomass. Together they provided nearly 29 percent of global electricity
+    generation in 2022 according to the IEA, and their share continues to grow.
+  candidate: |
+    Renewable energy—solar, wind, hydro, geothermal, biomass—supplied almost
+    29 % of the world’s power in 2022. The share is rising.
+  score: 0.6
+  reasoning: "No title, no paragraphs; wording simpler but structure limited."
+
+- id: restruct_013
+  input: |
+    Influenza viruses mutate rapidly, which is why seasonal flu vaccines must
+    be reformulated each year. High‑risk groups like the elderly benefit most
+    from annual vaccination.
+  candidate: |
+    ### Flu Vaccines
+
+    Flu viruses change quickly, so scientists update the vaccine every year.
+    Seniors especially need the shot.
+  score: 0.6
+  reasoning: "Intro is missing; two sentences only partly capture details
+              (drops mention of rapid mutation mechanism)."
+
+- id: restruct_014
+  input: |
+    Moore’s Law originally described the doubling of transistors on integrated
+    circuits roughly every two years, driving exponential growth in computing
+    power and decreasing cost per transistor.
+  candidate: |
+    Moore’s Law says chips double their transistors every two years. That trend
+    makes computers faster and cheaper.
+  score: 0.6
+  reasoning: "Short and readable, but no title/intro separation and merges all
+              ideas into one paragraph."
+
+- id: restruct_015
+  input: |
+    During photosynthesis, water molecules are split in the thylakoid membranes
+    to release electrons, protons, and oxygen. The electrons travel through an
+    electron transport chain generating ATP and NADPH, which fuel the Calvin
+    cycle in the stroma.
+  candidate: |
+    Photosynthesis splits water, releasing oxygen. The electrons create ATP and
+    NADPH that run the Calvin cycle.
+  score: 0.6
+  reasoning: "Meaning simplified; structure minimal; drops membrane locations."
+
+# ─────────────────── 0.4  (poor structure) ───────────────────
+- id: restruct_016
+  input: |
+    Beethoven’s Ninth Symphony premiered in 1824, featuring a choral finale
+    set to Schiller’s “Ode to Joy.” It was his first performance in 12 years
+    and took place despite his profound deafness.
+  candidate: |
+    Beethoven’s Ninth Symphony premiered in 1824 it was the first in 12 years
+    and had a chorus “Ode to Joy” and he was deaf.
+  score: 0.4
+  reasoning: "Removes paragraphing, no title/intro, sentence run‑on; still
+              conveys core facts."
+
+- id: restruct_017
+  input: |
+    The International Space Station orbits Earth approximately every 90
+    minutes at an altitude of about 400 km. It is a collaboration among NASA,
+    Roscosmos, ESA, JAXA, and CSA.
+  candidate: |
+    ### ISS Facts
+
+    Orbits Earth every 90 min at 400 km. NASA, Roscosmos, ESA, JAXA, CSA work
+    together.
+  score: 0.4
+  reasoning: "Has title but no intro paragraph and bullet‑like fragments; still
+              passes gist."
+
+- id: restruct_018
+  input: |
+    Carbon pricing mechanisms, such as cap‑and‑trade systems and carbon taxes,
+    aim to reduce greenhouse‑gas emissions by assigning a cost to emitting
+    carbon dioxide, encouraging businesses to invest in cleaner technologies.
+  candidate: |
+    Carbon pricing like cap and trade or carbon taxes charges companies for
+    pollution which should lower emissions.
+  score: 0.4
+  reasoning: "One line, missing structure; basic idea kept."
+
+- id: restruct_019
+  input: |
+    In classical conditioning, a neutral stimulus becomes associated with an
+    unconditioned stimulus, eventually triggering a conditioned response.
+  candidate: |
+    Conditioning links a neutral stimulus with another stimulus until it causes
+    a response.
+  score: 0.4
+  reasoning: "No structural improvements; loses specific terminology."
+
+- id: restruct_020
+  input: |
+    The Hubble Space Telescope has produced over 1.4 million observations
+    since its 1990 launch, revolutionizing our understanding of the universe’s
+    age, expansion, and galaxy formation.
+  candidate: |
+    Hubble has taken more than a million pictures since 1990 and helped us
+    learn a lot about space.
+  score: 0.4
+  reasoning: "Informal rewrite, but no title/intro/paragraphs; missing details."
+
+# ─────────────────── 0.2  (barely reworked) ───────────────────
+- id: restruct_021
+  input: |
+    Ocean acidification occurs when seawater absorbs carbon dioxide from the
+    atmosphere, lowering pH and harming shell‑forming organisms.
+  candidate: |
+    Ocean acidification occurs when seawater absorbs CO₂ from the atmosphere,
+    lowering pH and harming shell‑forming organisms.
+  score: 0.2
+  reasoning: "Only minor abbreviation (CO₂); essentially same wall of text."
+
+- id: restruct_022
+  input: |
+    Overuse of antibiotics accelerates the evolution of resistant bacteria,
+    rendering common treatments ineffective.
+  candidate: |
+    Overuse of antibiotics accelerates the evolution of resistant bacteria,
+    rendering common treatments ineffective. #Title: Antibiotic Resistance
+  score: 0.2
+  reasoning: "Appends a hash‑tag title but keeps original block; no real
+              restructure."
+
+- id: restruct_023
+  input: |
+    The Sahara Desert is expanding southward, a process known as
+    desertification, threatening arable land in the Sahel region and forcing
+    communities to migrate.
+  candidate: |
+    DESERTIFICATION: sahara expands south threatening land people move.
+  score: 0.2
+  reasoning: "All caps fragment loses clarity and grammar, minimal change."
+
+- id: restruct_024
+  input: |
+    Quantum computing leverages qubits, which can exist in superposition and
+    entanglement, allowing certain calculations to be performed exponentially
+    faster than classical bits.
+  candidate: |
+    Quantum computing is cool; stuff happens faster.
+  score: 0.2
+  reasoning: "Meaning warped by oversimplification; no structure."
+
+- id: restruct_025
+  input: |
+    The Black Death, caused by Yersinia pestis, killed an estimated 30–60 % of
+    Europe’s population between 1347 and 1351, reshaping economic and social
+    structures.
+  candidate: |
+    The Black Death happened long ago and lots of people died.
+  score: 0.2
+  reasoning: "Strips key stats and timeframe; barely reorganised."
+
+# ─────────────────── 0.0  (unrelated / nonsense) ───────────────────
+- id: restruct_026
+  input: |
+    Plate tectonics explains how Earth’s lithospheric plates move, interact at
+    boundaries, and create mountains, earthquakes, and volcanoes.
+  candidate: |
+    Purple turtles juggle pancakes on Jupiter every Sunday.
+  score: 0.0
+  reasoning: "Pure nonsense."
+
+- id: restruct_027
+  input: |
+    DNA replication ensures accurate copying of genetic information before cell
+    division, using enzymes like helicase and DNA polymerase.
+  candidate: |
+    ### DNA Replication Dance  
+    Thunder whispers. Moonlight swims in coffee.  
+    End.
+  score: 0.0
+  reasoning: "Absurd poetic text; no factual link."
+
+- id: restruct_028
+  input: |
+    Renewable hydrogen can be produced via electrolysis using surplus solar or
+    wind energy, offering a clean fuel for industries.
+  candidate: |
+    Cats prefer jazz over rock because it helps them sleep.
+  score: 0.0
+  reasoning: "Topically unrelated."
+
+- id: restruct_029
+  input: |
+    The Milankovitch cycles describe variations in Earth’s orbit and tilt that
+    influence long‑term climate patterns.
+  candidate: |
+    The Milankovitch cycles describe variations in Earth’s orbit and tilt that
+    influence long‑term climate patterns. But first, buy my NFT!
+  score: 0.0
+  reasoning: "Adds spam, violates meaning."
+
+- id: restruct_030
+  input: |
+    Lightning forms when electrical charges build up in storm clouds and
+    discharge to the ground or between clouds.
+  candidate: |
+    Banana telescope quantum cheesecake.
+  score: 0.0
+  reasoning: "Random word string."

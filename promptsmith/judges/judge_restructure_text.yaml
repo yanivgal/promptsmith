@@ -1,0 +1,15 @@
+structure:
+  compiled: null
+  weight: 0.40
+
+meaning:
+  compiled: null
+  weight: 0.25
+
+focus_relevance:
+  compiled: null
+  weight: 0.25
+
+readability:
+  compiled: null
+  weight: 0.10

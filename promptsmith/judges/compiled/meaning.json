@@ -1,0 +1,48 @@
+{
+  "traces": [],
+  "train": [],
+  "demos": [
+    {
+      "augmented": true,
+      "input_text": "Linda borrowed the book from Mark yesterday.",
+      "output_text": "Mark borrowed the book from Linda yesterday.",
+      "reasoning": "The output text completely changes the subject and the action of borrowing. In the original text, Linda is the one who borrowed the book from Mark, while in the restructured text, Mark is now the one borrowing the book from Linda. This alteration changes the meaning significantly, as it reverses the roles of the individuals involved in the action. Therefore, the essential meaning of the original text is lost in the output text.",
+      "score": 0.0
+    },
+    {
+      "input_text": "The novel was written by George\u00a0Orwell in 1949.",
+      "output_text": "The novel was written by J.\u202fK.\u00a0Rowling in 1949.",
+      "gold_score": 0.2,
+      "gold_reasoning": "Author misattributed; timeframe correct but misleading."
+    }
+  ],
+  "signature": {
+    "instructions": "You are a language processing expert tasked with evaluating the preservation of meaning in text transformations. Your job is to analyze the relationship between the original input text and the modified output text. Consider the following when making your assessment: \n1. Are all key ideas and important details from the original text maintained in the output?\n2. Have any significant changes or losses in meaning occurred due to the transformation?\n3. Are minor rephrasings or generalizations acceptable if they do not distort the overall meaning?\n\nAssign a score from 0 (indicating poor preservation of meaning) to 1 (indicating perfect preservation). Provide a clear explanation of your reasoning, highlighting what aspects of the original meaning were preserved and identifying any critical losses or changes.",
+    "fields": [
+      {
+        "prefix": "Input Text:",
+        "description": "The original text before restructuring."
+      },
+      {
+        "prefix": "Output Text:",
+        "description": "The restructured text to evaluate."
+      },
+      {
+        "prefix": "Reasoning:",
+        "description": "Explain where meaning was preserved or changed, and whether the changes are acceptable."
+      },
+      {
+        "prefix": "Score:",
+        "description": "A score between 0 (bad) and 1 (perfect) for how well meaning is preserved."
+      }
+    ]
+  },
+  "lm": null,
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.9",
+      "dspy": "2.6.19",
+      "cloudpickle": "3.1"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+bullet_structure:
+  compiled: null
+  weight: 0.30
+
+coverage:
+  compiled: null
+  weight: 0.30
+
+focus_relevance:
+  compiled: null
+  weight: 0.20
+
+redundancy:
+  compiled: null
+  weight: 0.20
