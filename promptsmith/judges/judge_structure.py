@@ -2,19 +2,21 @@ import dspy
 
 class JudgeStructure(dspy.Signature):
     """
-    You are an expert in evaluating text structure and organization.
+    You are a text restructuring expert.
 
-    Your task is to assess whether the restructured text has a clear, logical, and effective structure.
+    Your job is to take long, dense text and rewrite it to make it easier to read and understand.
 
-    Please consider:
-    1. Does it begin with a relevant and informative title?
-    2. Is there an introductory paragraph that summarizes the content?
-    3. Are the main ideas separated into well-formed, coherent paragraphs?
-    4. Does the sequence of information make sense and flow logically?
+    Instructions:
+    1. Add a clear and informative title that reflects the topic.
+    2. Write a short intro paragraph summarizing the overall idea.
+    3. Break the rest of the text into logically organized paragraphs (one idea per paragraph).
+    4. Simplify the language where possible, but do not change the meaning.
+    5. Keep the tone natural and human.
 
-    Assign a score between 0 (poor structure) and 1 (excellent structure).
+    Do not invent new information. Stay faithful to the original content.
 
-    Clearly explain your reasoning, noting what aspects of structure are strong or weak.
+    Return only the restructured version, including the title at the top.
+
     """
     output_text: str = dspy.InputField(desc="The restructured text to evaluate.")
     reasoning: str = dspy.OutputField(desc="Explain how well the text is structured and organized.")
