@@ -1,3 +1,6 @@
+from IPython.display import display, HTML
+from promptsmith.tasks.restructure_delta import RestructureDelta
+
 def display_verdict(verdict):
 
     print("\n📊 Evaluation Results:")
@@ -32,3 +35,30 @@ def display_verdict(verdict):
             print(f"### {judge_name} Analysis (score={score:.2f})")
         print(reasoning)
         print()
+
+def display_side_by_side(text1, text2, width="48%", padding="1%"):
+    html = """
+    <div style='display: flex; width: 100%;'>
+        <div style='width: {width}; padding: {padding}; overflow: auto; border: 1px solid #ddd;'>
+            <div style='font-weight: bold; margin-bottom: 10px;'>Original Text</div>
+            <pre style='white-space: pre-wrap; word-wrap: break-word; max-width: 100%; margin: 0;'>{text1}</pre>
+        </div>
+        <div style='width: {width}; padding: {padding}; overflow: auto; border: 1px solid #ddd;'>
+            <div style='font-weight: bold; margin-bottom: 10px;'>Transformed Text</div>
+            <pre style='white-space: pre-wrap; word-wrap: break-word; max-width: 100%; margin: 0;'>{text2}</pre>
+        </div>
+    </div>
+    """.format(width=width, padding=padding, text1=text1, text2=text2)
+    display(HTML(html))
+
+
+def display_original_transformed(dspy, original_text, transformed_text, verdict):
+    
+    display_side_by_side(original_text, transformed_text)
+    display_verdict(verdict)
+
+    summarize_differences = dspy.ChainOfThought(RestructureDelta)
+    result = summarize_differences(input_text=original_text, output_text=transformed_text)
+
+    print("🔍 Summary of Differences:")
+    print(result.summary_of_differences)
