@@ -8,5 +8,14 @@ setup(
         "python-dotenv",
         "dspy",
         "openai",
+        "ydata-profiling",
+        "pandas",
+        "numpy", 
+        "matplotlib",
+        "seaborn",
+        "scikit-learn",
+        "ipywidgets",
+        "streamlit"
+        
     ],
-) 
+)
