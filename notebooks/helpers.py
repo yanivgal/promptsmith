@@ -18,7 +18,7 @@ def display_verdict(verdict):
     if overall is None and score_fields:
         # Fallback: average of all scores
         overall = sum(store[k] for k in score_fields) / len(score_fields)
-    print(f"\n🌟 Overall Score: {overall:.3f}\n")
+    print(f"\n🌟 Overall Score: {overall:.3f} [{', '.join(score_fields)}]\n")
 
     # For each judge, display name, score, weight, and reasoning
     # Sort for consistent order
