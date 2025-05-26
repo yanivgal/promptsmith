@@ -46,7 +46,7 @@ class JudgeBulletStructure(dspy.Signature):
     • reasoning – brief list of hits/misses.  
     • score – float in [0, 1] (round to two decimals).
     """
-    input_text: str = dspy.InputField(desc="Original unstructured text (for context only).")
-    output_text: str = dspy.InputField(desc="Bulletized output to evaluate.")
+   #  input_text: str = dspy.InputField(desc="Original unstructured text (for context only).")
+    text: str = dspy.InputField(desc="Bulletized output to evaluate.")
     reasoning: str = dspy.OutputField(desc="Key structural strengths and weaknesses.")
     score: float = dspy.OutputField(desc="Structural compliance score 0-1.")
