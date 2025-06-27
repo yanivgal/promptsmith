@@ -43,10 +43,9 @@ class JudgeBulletStructure(dspy.Signature):
     A perfect score of 1.0 is rare; 0.8–0.9 reflects strong compliance; < 0.5 means weak structure.
 
     Return:
-    • reasoning – brief list of hits/misses.  
+    • reasoning – list of structural issues found (only includes failures).  
     • score – float in [0, 1] (round to two decimals).
     """
-   #  input_text: str = dspy.InputField(desc="Original unstructured text (for context only).")
-    text: str = dspy.InputField(desc="Bulletized output to evaluate.")
-    reasoning: str = dspy.OutputField(desc="Key structural strengths and weaknesses.")
+    output_text: str = dspy.InputField(desc="Bulletized output to evaluate.")
+    reasoning: str = dspy.OutputField(desc="List of structural issues found in the output.")
     score: float = dspy.OutputField(desc="Structural compliance score 0-1.")
