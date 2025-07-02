@@ -66,6 +66,50 @@ print(result.scores, result.combined_score)
 
 Consult the notebooks in `notebooks/` for more detailed examples and analysis.
 
+## Self-Refine
+
+PromptSmith includes an iterative "self-refinement" loop inspired by the
+[Self-Refine](https://arxiv.org/abs/2303.17651) paper. After a task runs, its
+output is scored by a set of judges. A `Refiner` module then attempts to fix the
+worst issues and the cycle repeats until a target score is met.
+
+Below is a simplified example from `notebooks/refine/refine copy 2.ipynb` showing
+how to set up the refinement orchestrator:
+
+```python
+dspy, _ = get_dspy()
+with open('data/text_01.txt') as f:
+    text = f.read()
+
+evaluator = TaskEvaluator(
+    task=dspy.ChainOfThought(BulletizeText),
+    judges={
+        'structure': dspy.Predict(JudgeBulletStructure),
+        'coverage': dspy.Predict(JudgeCoverage),
+        'focus_relevance': dspy.Predict(JudgeFocusRelevance),
+        'redundancy': dspy.Predict(JudgeRedundancy),
+    },
+    weights={
+        'structure': 0.5,
+        'coverage': 0.2,
+        'focus_relevance': 0.15,
+        'redundancy': 0.15,
+    },
+)
+
+orchestrator = RefinementOrchestrator(
+    evaluator=evaluator,
+    refiner=dspy.Predict(Refiner),
+    max_iterations=5,
+    score_threshold=0.96,
+)
+
+orchestrator.refine(text)
+```
+
+The first and final iterations are stored in `orchestrator.history` for further
+inspection.
+
 ## Contributing
 
 Pull requests are welcome. Feel free to open an issue or submit a PR if you find problems or have ideas for improvements.
