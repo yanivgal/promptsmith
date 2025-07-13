@@ -9,3 +9,5 @@ seaborn
 scikit-learn
 ipywidgets
 streamlit
+st-diff-viewer
+plotly
