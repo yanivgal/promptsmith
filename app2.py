@@ -4,10 +4,11 @@ import plotly.graph_objects as go
 import math
 from st_diff_viewer import diff_viewer
 
+refinements_file = "r_10_5.csv"
 
 @st.cache_data
 def load_data():
-    refinements = pd.read_csv("r_50_5.csv")
+    refinements = pd.read_csv(refinements_file)
     originals = pd.read_csv("data/documents_train.csv")
     return refinements, originals
 
@@ -41,6 +42,22 @@ def select_example(refinements_df, originals_df, example_id = None):
 
         original_text_row = originals_df[originals_df["id"] == example_df["original_id"].iloc[0]]
         st.session_state.original_text = original_text_row["resource"].iloc[0] if not original_text_row.empty else "Original text not found."
+
+
+def navigate_examples(refinements_df, originals_df, direction):
+    """Navigate to previous or next example"""
+    examples_ids = refinements_df["example_id"].unique()
+    
+    if "example_index" not in st.session_state:
+        st.session_state.example_index = 0
+    
+    if direction == "prev" and st.session_state.example_index > 0:
+        st.session_state.example_index -= 1
+    elif direction == "next" and st.session_state.example_index < len(examples_ids) - 1:
+        st.session_state.example_index += 1
+    
+    new_example_id = examples_ids[st.session_state.example_index]
+    select_example(refinements_df, originals_df, new_example_id)
 
 
 def render_navigation():
@@ -105,13 +122,51 @@ def create_interactive_score_plot(example_df):
 
 def render_sidebar(refinements_df, originals_df):
     
+    # Add file information at the top of sidebar
+    st.sidebar.markdown("### 📁 File Information")
+    st.sidebar.markdown(f"""Refinements File:  
+                        **{refinements_file}**""")
+    
+    # Count unique examples
+    unique_examples = refinements_df["example_id"].nunique()
+    st.sidebar.markdown(f"""Total Examples:  
+                        **{unique_examples}**""")
+    
+    # Example navigation buttons
+    st.sidebar.html("<hr style='border: 1px solid #555; margin: 0;'>")
+    st.sidebar.markdown("### 🔄 Navigate Examples")
+    st.sidebar.markdown("Select an example to view:")
     examples_ids = refinements_df["example_id"].unique()
-    selected_example_id = st.sidebar.selectbox("Select Example:", examples_ids)
+    
+    # Initialize example_index if not exists
+    if "example_index" not in st.session_state:
+        st.session_state.example_index = 0
+    
+    # Create navigation buttons
+    col1, col2, _ = st.sidebar.columns(3)
+    with col1:
+        prev_example_clicked = st.button("⬅️ Prev", key="prev_example_button")
+    with col2:
+        next_example_clicked = st.button("Next ➡️", key="next_example_button")
+    
+    # Handle navigation
+    if prev_example_clicked and st.session_state.example_index > 0:
+        navigate_examples(refinements_df, originals_df, "prev")
+    elif next_example_clicked and st.session_state.example_index < len(examples_ids) - 1:
+        navigate_examples(refinements_df, originals_df, "next")
+    
+    # Show current example info
+    
+    # Dropdown for direct selection
+    selected_example_id = st.sidebar.selectbox("Or jump to:", examples_ids, index=st.session_state.example_index)
 
     if selected_example_id != st.session_state.example_id:
+        # Update example_index to match selected example
+        st.session_state.example_index = list(examples_ids).index(selected_example_id)
         select_example(refinements_df, originals_df, selected_example_id)
 
-    st.sidebar.markdown("<div style='padding-top: 1rem;'></div>", unsafe_allow_html=True)
+    st.sidebar.html("<hr style='border: 1px solid #555; margin: 0;'>")
+    st.sidebar.markdown("### 📁 Example Details")
     row = st.session_state.iteration_row
     st.sidebar.markdown(f"""Title:  
                         **{row['title']}**""")
@@ -178,7 +233,13 @@ def render_scores_and_trends():
     best_score = true_best["current_best_score"]
     best_iteration = true_best["current_best_iteration"]
     
-    st.markdown("### 🧮 Scores & Trends")
+    t_1, t_2, t_3 = st.columns(3)
+    with t_1:
+        st.markdown("### 🧮 Scores & Trends")
+    with t_3:
+        st.markdown("<div style='padding-top: 0.5rem;'></div>", unsafe_allow_html=True)
+        st.markdown(f"""#### Best Score (iteration {int(best_iteration)}): **{best_score:.3f}**""")
+        
     left_col, right_col = st.columns([3, 2])
 
     with left_col:
@@ -195,9 +256,9 @@ def render_scores_and_trends():
         with c_s:
             st.markdown(f"""Combined Score:  
                         **{row['combined_score']:.3f}**""")
-        with b_s:
-            st.markdown(f"""Best Score (iteration {int(best_iteration)}):  
-                        **{best_score:.3f}**""")
+        # with b_s:
+        #     st.markdown(f"""Best Score (iteration {int(best_iteration)}):  
+        #                 **{best_score:.3f}**""")
 
         # st.markdown("<div style='padding-top: 1rem;'></div>", unsafe_allow_html=True)
         # st.markdown(f"Best Score: **{best_score:.3f}** (iteration {int(best_iteration)})")
@@ -234,6 +295,17 @@ def render_feedback_and_reasoning():
         st.write(row["refinement_reasoning"])
 
 
+def alter_css():
+
+    st.markdown("""
+    <style>
+    [data-testid="stSidebarHeader"] {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 def main():
     refinements_df, originals_df = load_data()
     st.set_page_config(layout="wide")
@@ -246,6 +318,7 @@ def main():
     render_scores_and_trends()
     render_feedback_and_reasoning()
     render_text_comparison()
+    alter_css()
 
 
 if __name__ == "__main__":
