@@ -19,7 +19,7 @@ def display_evaluation_result(
     reasonings = getattr(result, 'reasonings', {})
     combined_score = getattr(result, 'combined_score', 0.0)
     
-    print(f"\nCombined score: {combined_score:.2f}")
+    print(f"\n{_color_score(combined_score, label="combined score")}")
     
     # Display each judge's score and reasoning
     for judge, score in scores.items():
