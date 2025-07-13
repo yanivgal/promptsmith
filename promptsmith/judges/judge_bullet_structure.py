@@ -27,7 +27,8 @@ class JudgeBulletStructure(dspy.Signature):
        • Bold label used when natural (e.g., **Course Design:**).
 
     5. **Section closing line**
-       • Exactly one italic summary line (`* … *` or `_ … _`).  
+       • Include at most one italic summary line (* ... *) only if it adds clarity or synthesis.
+       • Include the summary unless it's clearly redundant—for example, if it closely repeats one of the bullets or the section is extremely short (fewer than 3 bullets).
        • Must NOT start with “Takeaway:”.
 
     6. **Separators**

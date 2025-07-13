@@ -11,9 +11,15 @@ class JudgeRedundancy(dspy.Signature):
     2. Is the output unnecessarily verbose due to repetition?
     3. Would a human reader feel like certain content is repeated?
 
-    Assign a score between 0 (highly redundant) and 1 (no noticeable redundancy).
+    Focus only on repetition within the output, not grammar, formatting, or similarity to the input.
 
-    Focus only on repetition, not grammar or formatting.
+    Scoring guideline:
+    - Use 0.0 for extremely redundant text where repetition is frequent and distracting.
+    - Use 0.1–0.3 for moderate redundancy across multiple parts.
+    - Use 0.4–0.7 for localized or mild repetition.
+    - Use 0.8–1.0 for minimal to no noticeable redundancy.
+
+    Make sure the score reflects the severity of the redundancy described in your explanation.
 
     Provide a short explanation of any repeated content you found.
     """
