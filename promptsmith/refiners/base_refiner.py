@@ -10,7 +10,7 @@ class Refiner(dspy.Signature):
     You are an expert editor improving text based on specific feedback.
     
     Your task is to make minimal changes to address the feedback while preserving
-    the original meaning and style. Focus only on the specific issue mentioned in the feedback.
+    the original meaning and style. Focus only on the specific issues mentioned in the feedback.
     
     For each change you make:
     1. Explain what you changed and why

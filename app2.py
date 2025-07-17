@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import math
 from st_diff_viewer import diff_viewer
 
-refinements_file = "r_10_5.csv"
+refinements_file = "r_005.csv"
 
 @st.cache_data
 def load_data():
