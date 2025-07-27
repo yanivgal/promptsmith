@@ -4,16 +4,22 @@ import plotly.graph_objects as go
 import math
 from st_diff_viewer import diff_viewer
 
-refinements_file = "r_005.csv"
+refinements_file = "r_200_5.csv"
 
 @st.cache_data
 def load_data():
+    print("DEBUG: Loading data...")
     refinements = pd.read_csv(refinements_file)
-    originals = pd.read_csv("data/documents_train.csv")
+    print(f"DEBUG: Loaded refinements with shape: {refinements.shape}")
+    originals = pd.read_csv("data/documents_train_original.csv")
+    print(f"DEBUG: Loaded originals with shape: {originals.shape}")
+    print(f"DEBUG: Originals columns: {originals.columns.tolist()}")
+    print(f"DEBUG: First few original IDs: {originals['id'].head().tolist()}")
     return refinements, originals
 
 
 def select_iteration(iteration_idx):
+    print(f"DEBUG: Selecting iteration {iteration_idx}")
 
     iteration = st.session_state.example_df.iloc[iteration_idx]
 
@@ -23,29 +29,49 @@ def select_iteration(iteration_idx):
 
 
 def select_example(refinements_df, originals_df, example_id = None):
+    print(f"DEBUG: select_example called with example_id: {example_id}")
 
     if example_id is None:
         if "example_id" in st.session_state:
             example_id = st.session_state.example_id
+            print(f"DEBUG: Using existing example_id from session: {example_id}")
         else:
             example_id = refinements_df["example_id"].iloc[0]
+            print(f"DEBUG: Using first example_id from refinements: {example_id}")
             st.session_state.example_id = "empty_example_id"
         
     if example_id != st.session_state.example_id:
+        print(f"DEBUG: Example ID changed from {st.session_state.example_id} to {example_id}")
 
         example_df = refinements_df[refinements_df["example_id"] == example_id].sort_values("iteration_number").reset_index(drop=True)
+        print(f"DEBUG: Found {len(example_df)} iterations for example {example_id}")
         
         st.session_state.example_id = example_id
         st.session_state.example_df = example_df
         st.session_state.total_iterations = len(example_df)
         select_iteration(0)
 
-        original_text_row = originals_df[originals_df["id"] == example_df["original_id"].iloc[0]]
-        st.session_state.original_text = original_text_row["resource"].iloc[0] if not original_text_row.empty else "Original text not found."
+        original_id = example_df["original_id"].iloc[0]
+        print(f"DEBUG: Looking for original_id: {original_id}")
+        print(f"DEBUG: Available original IDs: {originals_df['id'].unique()[:10]}")  # Show first 10
+        
+        original_text_row = originals_df[originals_df["id"] == original_id]
+        print(f"DEBUG: Found {len(original_text_row)} rows for original_id {original_id}")
+        
+        if not original_text_row.empty:
+            original_text = original_text_row["resource"].iloc[0]
+            print(f"DEBUG: Original text length: {len(original_text)}")
+            print(f"DEBUG: Original text preview: {original_text[:100]}...")
+        else:
+            original_text = "Original text not found."
+            print(f"DEBUG: Original text not found for ID {original_id}")
+        
+        st.session_state.original_text = original_text
 
 
 def navigate_examples(refinements_df, originals_df, direction):
     """Navigate to previous or next example"""
+    print(f"DEBUG: Navigating {direction}")
     examples_ids = refinements_df["example_id"].unique()
     
     if "example_index" not in st.session_state:
@@ -57,6 +83,7 @@ def navigate_examples(refinements_df, originals_df, direction):
         st.session_state.example_index += 1
     
     new_example_id = examples_ids[st.session_state.example_index]
+    print(f"DEBUG: New example_id: {new_example_id}")
     select_example(refinements_df, originals_df, new_example_id)
 
 
@@ -184,6 +211,10 @@ def render_text_comparison():
     row = st.session_state.iteration_row
     original_text = st.session_state.original_text
     iteration_idx = st.session_state.iteration_idx
+
+    print(f"DEBUG: render_text_comparison - original_text type: {type(original_text)}")
+    print(f"DEBUG: render_text_comparison - original_text length: {len(original_text) if original_text else 'None'}")
+    print(f"DEBUG: render_text_comparison - original_text preview: {original_text[:100] if original_text else 'None'}...")
 
     st.markdown("### 📄 Text Comparison")
 
