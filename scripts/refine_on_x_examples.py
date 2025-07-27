@@ -48,7 +48,7 @@ def setup_refinement_orchestrator(max_iterations=5, score_threshold=0.90):
     
     orchestrator = EnhancedRefinementOrchestrator(
         evaluator=bulletize_text_evaluator,
-        refiner=dspy.Predict(Refiner),
+        refiner=dspy.ChainOfThought(Refiner),
         feedback_aggregator=feedback_aggregator,
         max_iterations=max_iterations,
         score_threshold=score_threshold
