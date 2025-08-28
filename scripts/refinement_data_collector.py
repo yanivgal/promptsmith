@@ -29,6 +29,12 @@ class RefinementIteration:
     refinement_reasoning: str
     is_final_iteration: bool
     converged_early: bool
+    
+    # Timing fields
+    evaluation_time: float  # Time for all judges to evaluate
+    aggregation_time: float  # Time for feedback aggregation
+    refinement_time: float  # Time for refinement generation
+    total_iteration_time: float  # Total time for this iteration
 
 @dataclass
 class RefinementResult:
@@ -43,6 +49,10 @@ class RefinementResult:
     total_iterations: int
     max_combined_score: float
     iteration_of_max_combined_score: int
+    
+    # Timing fields
+    total_refinement_time: float  # Total time for entire refinement process
+    avg_time_per_iteration: float  # Average time per iteration
 
 class RefinementDataCollector:
     """Collects and manages refinement data for multiple examples."""
@@ -93,7 +103,14 @@ class RefinementDataCollector:
                     'converged_early': iteration.converged_early,
                     'total_iterations': result.total_iterations,
                     'current_best_score': round(current_best, 4),
-                    'current_best_iteration': current_best_iteration
+                    'current_best_iteration': current_best_iteration,
+                    # Timing fields
+                    'evaluation_time': round(iteration.evaluation_time, 3),
+                    'aggregation_time': round(iteration.aggregation_time, 3),
+                    'refinement_time': round(iteration.refinement_time, 3),
+                    'total_iteration_time': round(iteration.total_iteration_time, 3),
+                    'total_refinement_time': round(result.total_refinement_time, 3),
+                    'avg_time_per_iteration': round(result.avg_time_per_iteration, 3)
                 }
                 csv_rows.append(row)
         
@@ -132,11 +149,37 @@ class RefinementDataCollector:
             if i.converged_early
         )
         
+        # Timing statistics
+        total_time = sum(r.total_refinement_time for r in self.results)
+        avg_time_per_example = total_time / total_examples
+        avg_time_per_iteration = sum(r.avg_time_per_iteration for r in self.results) / total_examples
+        
+        # Phase timing breakdown
+        total_evaluation_time = sum(
+            sum(i.evaluation_time for i in r.iterations) for r in self.results
+        )
+        total_aggregation_time = sum(
+            sum(i.aggregation_time for i in r.iterations) for r in self.results
+        )
+        total_refinement_time_phase = sum(
+            sum(i.refinement_time for i in r.iterations) for r in self.results
+        )
+        
         return {
             'total_examples': total_examples,
             'total_iterations': total_iterations,
             'average_iterations_per_example': avg_iterations,
             'average_final_score': avg_final_score,
             'examples_converged_early': converged_early_count,
-            'convergence_rate': converged_early_count / total_examples if total_examples > 0 else 0
+            'convergence_rate': converged_early_count / total_examples if total_examples > 0 else 0,
+            # Timing statistics
+            'total_time': total_time,
+            'average_time_per_example': avg_time_per_example,
+            'average_time_per_iteration': avg_time_per_iteration,
+            'total_evaluation_time': total_evaluation_time,
+            'total_aggregation_time': total_aggregation_time,
+            'total_refinement_time_phase': total_refinement_time_phase,
+            'evaluation_time_percentage': (total_evaluation_time / total_time * 100) if total_time > 0 else 0,
+            'aggregation_time_percentage': (total_aggregation_time / total_time * 100) if total_time > 0 else 0,
+            'refinement_time_percentage': (total_refinement_time_phase / total_time * 100) if total_time > 0 else 0
         } 

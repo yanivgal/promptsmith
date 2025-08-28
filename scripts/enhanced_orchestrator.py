@@ -4,6 +4,7 @@ Enhanced orchestrator that captures detailed iteration information for data coll
 Extends the base RefinementOrchestrator with data collection capabilities.
 """
 
+import time
 from typing import Dict, Any, List, Optional
 from promptsmith.refiners.orchestrator import RefinementOrchestrator
 from promptsmith.evaluation.task_evaluator import TaskEvaluator
@@ -48,6 +49,9 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
         current_output = None
         converged_early = False
         actual_iterations = 0
+        
+        # Start overall timing
+        overall_start_time = time.time()
 
         if self.verbose:
             print("\n" + "="*80)
@@ -55,6 +59,7 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
             print("="*80)
 
         for iteration in range(1, self.max_iterations + 1):
+            iteration_start_time = time.time()
             actual_iterations = iteration
             if self.verbose:
                 print(f"\n🔄 Iteration {iteration}/{self.max_iterations}")
@@ -64,7 +69,9 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
             if self.verbose:
                 print("🔍 Evaluating current output...")
                 
+            eval_start_time = time.time()
             current_result = self.evaluator.evaluate(input_text)
+            evaluation_time = time.time() - eval_start_time
             self.history.append(current_result)
 
             # Display progress if verbose
@@ -73,6 +80,7 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
                     result=current_result,
                     iteration=iteration,
                 )
+                print(f"⏱️  Evaluation time: {evaluation_time:.2f}s")
 
             # Check if we've met the threshold
             if current_result.passed(self.score_threshold):
@@ -81,8 +89,10 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
                 converged_early = True
                 
                 # Record the final iteration
+                total_iteration_time = time.time() - iteration_start_time
                 self._record_iteration(
-                    iteration, current_result, None, "", converged_early, True
+                    iteration, current_result, None, "", converged_early, True,
+                    evaluation_time, 0.0, 0.0, total_iteration_time
                 )
                 break
 
@@ -93,20 +103,26 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
                     print(f"\n🏁 Final iteration reached - evaluating without refinement")
                 
                 # Record the final iteration (evaluation only)
+                total_iteration_time = time.time() - iteration_start_time
                 self._record_iteration(
-                    iteration, current_result, None, "", False, True
+                    iteration, current_result, None, "", False, True,
+                    evaluation_time, 0.0, 0.0, total_iteration_time
                 )
                 break
 
             # Aggregate feedback from all judges
+            agg_start_time = time.time()
             combined_feedback = self._aggregate_feedback(input_text, current_result)
+            aggregation_time = time.time() - agg_start_time
             
             if self.verbose:
-                print(f"\n📊 Aggregated feedback from {len(current_result.reasonings)} judges into a single combined feedback:\n")
-                print(f"{combined_feedback}")
+                print(f"\n📊 Aggregated feedback from {len(current_result.reasonings)} judges into a single combined feedback:")
+                print(f"⏱️  Aggregation time: {aggregation_time:.2f}s")
+                print(f"\n{combined_feedback}")
                 print("\n🛠️  Generating refinement...")
 
             # Generate refined output using the DSPy module
+            ref_start_time = time.time()
             refinement = self.refiner(
                 original_text=input_text,
                 current_output=current_result.output,
@@ -114,16 +130,21 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
                 task_type='bulletize',
                 feedback_type='aggregated'
             )
+            refinement_time = time.time() - ref_start_time
             
             # Record this iteration before updating
+            total_iteration_time = time.time() - iteration_start_time
             self._record_iteration(
-                iteration, current_result, refinement.reasoning, combined_feedback, False, False
+                iteration, current_result, refinement.reasoning, combined_feedback, False, False,
+                evaluation_time, aggregation_time, refinement_time, total_iteration_time
             )
             
             # Update current output for next iteration
             current_output = refinement.refined_output
             
             if self.verbose:
+                print(f"⏱️  Refinement time: {refinement_time:.2f}s")
+                print(f"⏱️  Total iteration time: {total_iteration_time:.2f}s")
                 print("✨ Refinement complete!\n")
                 if hasattr(refinement, 'reasoning') and refinement.reasoning:
                     print(f"{refinement.reasoning}")
@@ -140,6 +161,14 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
             print(f"🏁 Refinement complete after {actual_iterations} iteration{'s' if actual_iterations != 1 else ''}")
             final_score = self.history[-1].combined_score if self.history else 0
             print("="*60 + "\n")
+
+        # Calculate overall timing
+        total_refinement_time = time.time() - overall_start_time
+        avg_time_per_iteration = total_refinement_time / actual_iterations if actual_iterations > 0 else 0.0
+        
+        if self.verbose:
+            print(f"⏱️  Total refinement time: {total_refinement_time:.2f}s")
+            print(f"⏱️  Average time per iteration: {avg_time_per_iteration:.2f}s")
 
         # Create and return the complete refinement result
         # Find the iteration with the maximum combined score
@@ -160,7 +189,9 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
             iterations=self.detailed_history,
             total_iterations=actual_iterations,
             max_combined_score=max_score,  # Use the actual max score, not the last score
-            iteration_of_max_combined_score=max_score_iteration
+            iteration_of_max_combined_score=max_score_iteration,
+            total_refinement_time=total_refinement_time,
+            avg_time_per_iteration=avg_time_per_iteration
         )
 
     def _record_iteration(
@@ -170,7 +201,11 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
         refinement_reasoning: Optional[str],
         combined_feedback: str,
         converged_early: bool,
-        is_final_iteration: bool
+        is_final_iteration: bool,
+        evaluation_time: float,
+        aggregation_time: float,
+        refinement_time: float,
+        total_iteration_time: float
     ):
         """Record detailed information for a single iteration."""
         iteration = RefinementIteration(
@@ -188,6 +223,10 @@ class EnhancedRefinementOrchestrator(RefinementOrchestrator):
             output=result.output,
             refinement_reasoning=refinement_reasoning or '',
             is_final_iteration=is_final_iteration,
-            converged_early=converged_early
+            converged_early=converged_early,
+            evaluation_time=evaluation_time,
+            aggregation_time=aggregation_time,
+            refinement_time=refinement_time,
+            total_iteration_time=total_iteration_time
         )
         self.detailed_history.append(iteration) 
