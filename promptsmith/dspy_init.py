@@ -32,3 +32,28 @@ def get_dspy():
         _dspy_instance = dspy
         
         return _dspy_instance, _lm_instance
+    
+def get_lm(provider: str = "openai", model: str = "gpt-4o-mini", cache: bool = False):
+    """
+    Create and return a new DSPy LM instance without setting global config.
+
+    Parameters:
+        provider (str): The provider name ('openai', 'anthropic', etc.).
+        model (str): The model name (e.g., 'gpt-4o', 'claude-3-haiku').
+        cache (bool): Whether to cache results.
+
+    Returns:
+        dspy.LM: A DSPy-compatible language model instance.
+    """
+    load_dotenv()
+
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        model_id = f"openai/{model}"
+    elif provider == "anthropic":
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        model_id = f"anthropic/{model}"
+    else:
+        raise ValueError(f"Unsupported provider: {provider}")
+
+    return dspy.LM(model_id, api_key=api_key, cache=cache)
