@@ -110,6 +110,8 @@ def run_refinement_on_examples(examples, orchestrator, data_collector):
             print(f"Best score: {refinement_result.max_combined_score:.3f}")
             print(f"Best iteration: {refinement_result.iteration_of_max_combined_score}")
             print(f"Total iterations: {refinement_result.total_iterations}")
+            print(f"⏱️  Total time: {refinement_result.total_refinement_time:.2f}s")
+            print(f"⏱️  Average time per iteration: {refinement_result.avg_time_per_iteration:.2f}s")
             
         except Exception as e:
             print(f"Error processing example {i}: {e}")
@@ -179,6 +181,38 @@ def main():
         
         avg_iterations = sum(r['refinement_result'].total_iterations for r in successful_results) / len(successful_results)
         print(f"Average iterations: {avg_iterations:.1f}")
+        
+        # Timing statistics
+        total_time = sum(r['refinement_result'].total_refinement_time for r in successful_results)
+        avg_time_per_example = total_time / len(successful_results)
+        avg_time_per_iteration = sum(r['refinement_result'].avg_time_per_iteration for r in successful_results) / len(successful_results)
+        
+        # Calculate average breakdown per iteration
+        total_eval_time = sum(
+            sum(i.evaluation_time for i in r['refinement_result'].iterations) 
+            for r in successful_results
+        )
+        total_agg_time = sum(
+            sum(i.aggregation_time for i in r['refinement_result'].iterations) 
+            for r in successful_results
+        )
+        total_ref_time = sum(
+            sum(i.refinement_time for i in r['refinement_result'].iterations) 
+            for r in successful_results
+        )
+        total_iterations = sum(r['refinement_result'].total_iterations for r in successful_results)
+        
+        avg_eval_per_iter = total_eval_time / total_iterations if total_iterations > 0 else 0
+        avg_agg_per_iter = total_agg_time / total_iterations if total_iterations > 0 else 0
+        avg_ref_per_iter = total_ref_time / total_iterations if total_iterations > 0 else 0
+        
+        print(f"\n⏱️  Timing Statistics:")
+        print(f"  Total time for all examples: {total_time:.2f}s")
+        print(f"  Average time per example: {avg_time_per_example:.2f}s")
+        print(f"  Average time per iteration: {avg_time_per_iteration:.2f}s")
+        print(f"    └─ Evaluation: {avg_eval_per_iter:.2f}s ({(avg_eval_per_iter/avg_time_per_iteration*100):.1f}%)")
+        print(f"    └─ Aggregation: {avg_agg_per_iter:.2f}s ({(avg_agg_per_iter/avg_time_per_iteration*100):.1f}%)")
+        print(f"    └─ Refinement: {avg_ref_per_iter:.2f}s ({(avg_ref_per_iter/avg_time_per_iteration*100):.1f}%)")
     
     # print detailed statistics
     summary_stats = data_collector.get_summary_stats()
@@ -190,6 +224,15 @@ def main():
         print(f"  Average final score: {summary_stats['average_final_score']:.3f}")
         print(f"  Examples converged early: {summary_stats['examples_converged_early']}")
         print(f"  Convergence rate: {summary_stats['convergence_rate']:.2%}")
+        
+        # Detailed timing breakdown
+        print(f"\n⏱️  Detailed Timing Breakdown:")
+        print(f"  Total time: {summary_stats['total_time']:.2f}s")
+        print(f"  Average time per example: {summary_stats['average_time_per_example']:.2f}s")
+        print(f"  Average time per iteration: {summary_stats['average_time_per_iteration']:.2f}s")
+        print(f"  Evaluation time: {summary_stats['total_evaluation_time']:.2f}s ({summary_stats['evaluation_time_percentage']:.1f}%)")
+        print(f"  Aggregation time: {summary_stats['total_aggregation_time']:.2f}s ({summary_stats['aggregation_time_percentage']:.1f}%)")
+        print(f"  Refinement time: {summary_stats['total_refinement_time_phase']:.2f}s ({summary_stats['refinement_time_percentage']:.1f}%)")
     
     print(f"\nDetailed results saved to: {csv_output_file}")
 
