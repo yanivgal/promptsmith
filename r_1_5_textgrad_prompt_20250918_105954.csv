@@ -1,0 +1,38 @@
+example_id,original_id,title,profession,purpose,input_text,improved_prompt,final_outline,final_score,per_judge_scores,per_judge_reasonings,steps
+example_001,51a1f095-cda5-4691-9a41-07da40242b90,Turkcell,it specialist,work,"15 Apr 2020
+                   Turkish mobile operator Turkcell has selected US-based Affirmed Networks’ Service Orchestration & Automation platform and its virtualised Wi-Fi gateway ‘to profitably introduce new revenue-generating services faster and deliver seamless connectivity to customers’. Affirmed CTO Ron Parker said: ‘Implementing this platform, combined with our Wi-Fi solution, will allow Turkcell to create new network slices, help their enterprise customers to on-board and provision new customer premise equipment and enable new subscriber services to be deployed quickly, seamlessly and more reliably.’
+ In Q1 2019 Turkcell and Affirmed completed the implementation of a single, unified Network Function Virtualisation (NFV) infrastructure, and Turkcell has now virtualised 60% of its mobile core services on its telco cloud, which features 20 unique virtualised network functions (VNFs), and is on target to meet its 75% goal by the end of 2020.","You are an expert technical writer tasked with creating a structured outline that accurately reflects the key points of the provided input text. Your writing must strictly follow the outlined structure to ensure clarity and coherence. 
+
+1. **Title**: Create an appropriate title that reflects the main topic of the input text.
+2. **One-line Summary**: Include a concise one-line summary that encapsulates the essence of the content.
+3. **Headings**: Divide the content into two major sections, each with meaningful H2 headings that clearly indicate the focus of that section.
+4. **Bullet Points**: Use bullet points to present key information in each section. Ensure that:
+   - Each bullet point is concise and starts with appropriate symbols (e.g., dashes or asterisks).
+   - The bullet points cover all significant aspects of the input text, including any specific technologies or partnerships mentioned.
+   - Be mindful of repetitive phrases or ideas; strive for concise and distinct bullet points that convey unique information.
+5. **Closing Lines**: End each section with a closing line that summarizes the section's content without starting with ""Takeaway:"".
+6. **Separation**: Use three dashes to separate the two major sections.
+7. **Extraneous Text**: Ensure there is no extraneous text outside the outline; all content should be relevant to the input text.
+
+Your output should fully satisfy these structural rules, cover all key points from the input, maintain a clear focus on the original message, and avoid redundancy. Your bullet points should be clear and easily understandable, avoiding jargon unless necessary for technical accuracy.","# Turkcell Partners with Affirmed Networks for Service Automation
+
+Turkcell is enhancing its service offerings through a partnership with Affirmed Networks.
+
+## Partnership Overview
+- **Date of Announcement:** 15 Apr 2020
+- **Partnering Companies:** Turkcell (Turkey) and Affirmed Networks (USA)
+- **Platform Selected:** Affirmed Networks’ Service Orchestration & Automation platform
+- **Objective:** To introduce new revenue-generating services faster and improve customer connectivity.
+- **CTO Statement:** Ron Parker emphasized the benefits of the platform for creating network slices and provisioning new customer equipment.
+
+Turkcell aims to leverage this partnership to enhance service delivery and customer experience.
+
+---
+
+## Network Virtualization Progress
+- **Previous Collaboration:** Turkcell and Affirmed completed a unified Network Function Virtualisation (NFV) infrastructure in Q1 2019.
+- **Current Virtualization Status:** Turkcell has virtualized 60% of its mobile core services on its telco cloud.
+- **Unique VNFs:** The infrastructure includes 20 unique virtualized network functions (VNFs).
+- **Future Goal:** Turkcell aims to reach 75% virtualization by the end of 2020.
+
+This progress highlights Turkcell's commitment to modernizing its network infrastructure.",0.785,"{""structure"": 0.7, ""coverage"": 0.9, ""focus_relevance"": 1.0, ""redundancy"": 0.7}","{""structure"": ""- The title is appropriate and follows the guidelines.\n- The one-line summary is present and concise.\n- Section heads are correctly formatted with H2 headings.\n- The bullet points within each section are well-structured and concise.\n- Each section has a closing line, but the closing lines do not follow the required format of starting with an italicized summary line.\n- There are no separators between the major sections, which is a violation of the formatting rules.\n- There is no extraneous text present."", ""coverage"": ""The output text captures the main ideas from the original input, including the partnership between Turkcell and Affirmed Networks, the selection of the Service Orchestration & Automation platform, and the objectives of improving service delivery and customer connectivity. It also includes the CTO's statement about the benefits of the platform. Furthermore, the section on network virtualization progress accurately reflects the timeline and details of Turkcell's previous collaboration with Affirmed, the current status of virtualization, and the future goal. However, the output does not explicitly mention the aspect of enabling new subscriber services to be deployed quickly, seamlessly, and more reliably, which is a significant point from the original text. Overall, the output is comprehensive but misses this specific detail."", ""focus_relevance"": ""The restructured text maintains a strong focus on the original message regarding Turkcell's partnership with Affirmed Networks and the advancements in network virtualization. It effectively summarizes the key points, including the date of the announcement, the objectives of the partnership, and the current status of Turkcell's virtualization efforts. The added sections are relevant and directly related to the original content, avoiding any off-topic or generic filler. The CTO's statement is included to emphasize the benefits of the partnership, which aligns with the original text's focus. Overall, the rewrite stays true to the main ideas and provides a clear, organized presentation of the information."", ""redundancy"": ""The output text contains some redundancy, particularly in the sections discussing Turkcell's partnership with Affirmed Networks and its network virtualization progress. The partnership overview and the network virtualization progress both emphasize Turkcell's commitment to enhancing service delivery and modernizing its infrastructure. Additionally, the mention of the partnership's objective to improve customer connectivity is somewhat echoed in the statement about enhancing service delivery and customer experience. This could be simplified by consolidating these ideas into a single, cohesive statement about Turkcell's goals with the partnership and virtualization efforts.""}",5
